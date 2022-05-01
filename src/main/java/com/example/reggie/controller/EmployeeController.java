@@ -87,12 +87,12 @@ public class EmployeeController {
         log.info("新增员工，具体信息为{}", employee);
         //为新增用户添加默认面膜
         employee.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
+        //employee.setCreateTime(LocalDateTime.now());
+        //employee.setUpdateTime(LocalDateTime.now());
         //获取当前用户登录的id
-        Long empId = (Long) request.getSession().getAttribute("employee");
-        employee.setCreateUser(empId);
-        employee.setUpdateUser(empId);
+//        Long empId = (Long) request.getSession().getAttribute("employee");
+//        employee.setCreateUser(empId);
+//        employee.setUpdateUser(empId);
 
         employeeService.save(employee);
         return R.success("用户添加成功");
@@ -134,9 +134,9 @@ public class EmployeeController {
         log.info("线程id为：{}",id);
 
         //即js对long型数据进行处理时丢失精度，导致提交的id和数据库中的id不一致。 雪花算法精度丢失
-        Long empId = (Long)request.getSession().getAttribute("employee");
-        employee.setUpdateTime(LocalDateTime.now());
-        employee.setUpdateUser(empId);
+//        Long empId = (Long)request.getSession().getAttribute("employee");
+//        employee.setUpdateTime(LocalDateTime.now());
+//        employee.setUpdateUser(empId);
         employeeService.updateById(employee);
         return R.success("修改员工信息成功");
     }
