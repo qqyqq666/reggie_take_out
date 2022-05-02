@@ -48,29 +48,24 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
         dishFlavorService.saveBatch(flavors);//因为是列表  所以要批量添加
     }
 
-    /**
-     * 根据id查询菜品信息和对应的口味信息
-     * @param id
-     * @return
-     */
     @Override
     public DishDto getByIdWithFlavor(Long id) {
         //查询菜品基本信息，从dish表查询
         Dish dish = this.getById(id);
 
         DishDto dishDto = new DishDto();
-        BeanUtils.copyProperties(dish,dishDto);//将dish中的属性值拷贝到dishDto中
-
+        BeanUtils.copyProperties(dish, dishDto);//将dish中的属性值拷贝到dishDto中
         //查询当前菜品对应的口味信息，从dish_flavor表查询
-        LambdaQueryWrapper<DishFlavor> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(DishFlavor::getDishId,dish.getId());
-        List<DishFlavor> flavors = dishFlavorService.list(queryWrapper);
-        dishDto.setFlavors(flavors);
+        LambdaQueryWrapper<DishFlavor> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(DishFlavor::getId, dish.getId());
+        List<DishFlavor> list = dishFlavorService.list(lambdaQueryWrapper);
+        dishDto.setFlavors(list);
         return dishDto;
     }
 
+
     @Override
-    @Transactional
+    @Transactional   //要么全成功要么全失败
     public void updateWithFlavor(DishDto dishDto) {
         //更新dish表基本信息
         this.updateById(dishDto);
