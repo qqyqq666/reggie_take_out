@@ -100,4 +100,14 @@ public class SetmealController {
         setmealService.removeWithDish(ids);
         return R.success("套餐数据删除成功");
     }
+    @GetMapping("/list")
+    public R<List<Setmeal>> list(Setmeal setmeal){//注意这里不用加@ResquestBody 前端传的是键值对 而不是json格式
+        LambdaQueryWrapper<Setmeal> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(setmeal.getCategoryId() != null, Setmeal::getCategoryId,setmeal.getCategoryId());
+        //只查status为1（即展示在线出售的）
+        lambdaQueryWrapper.eq(setmeal.getStatus() != null, Setmeal::getStatus,setmeal.getStatus());
+        lambdaQueryWrapper.orderByDesc(Setmeal::getUpdateTime);
+        List<Setmeal> list = setmealService.list(lambdaQueryWrapper);
+        return R.success(list);
+    }
 }

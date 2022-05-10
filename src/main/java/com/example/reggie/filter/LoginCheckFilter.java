@@ -32,13 +32,17 @@ public class LoginCheckFilter implements Filter{
 
         log.info("拦截到请求：{}",requestURI);
 
-        //定义不需要处理的请求路径
+        //定义不需要处理的请求路径  day06
         String[] urls = new String[]{
                 "/employee/login",
                 "/employee/logout",
                 "/backend/**",
-                "/front/**"
+                "/front/**",
+                "/user/sendMsg",
+                "/user/login"
+
         };
+
 
 
         //2、判断本次请求是否需要处理
@@ -58,6 +62,17 @@ public class LoginCheckFilter implements Filter{
             log.info("线程id为：{}",id);
             Long empId = (Long) request.getSession().getAttribute("employee");
             BaseContext.setCurrentId(empId);
+            filterChain.doFilter(request,response);
+            return;
+        }
+
+        //4-2、判断登录状态，如果已登录，则直接放行
+        if(request.getSession().getAttribute("user") != null){
+            log.info("用户已登录，用户id为：{}",request.getSession().getAttribute("user"));
+
+            Long userId = (Long) request.getSession().getAttribute("user");
+            BaseContext.setCurrentId(userId);
+
             filterChain.doFilter(request,response);
             return;
         }
